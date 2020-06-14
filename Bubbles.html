@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>    
+  <head>
+      <title>JS Practice</title>
+  </head>
+
+  <style>
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      position: absolute;
+    }
+  </style>
+
+  <body onload="start()">
+    <canvas id="canvas"></canvas>
+  </body>
+
+  <script type="application/javascript">
+    var mainCanvas;
+    var ctx;
+    var bubbles;
+
+    function Bubble(x, y, size, color, speed) {
+      var that = this;
+      this.x = x;
+      this.y = y;
+      this.size = size;
+      this.color = color;
+      this.speed = speed;
+      this.rise = function() {
+        var sinWave = Math.sin(that.y / (45 * that.speed));
+        //bubble has reached top and resets to bottom
+        if (that.y <= (0 - that.size)) {
+          that.reset();
+        } else {
+          that.y -= that.speed;
+        }
+        //bubble is off or touching side of canvas window
+        if ((that.x - that.size - sinWave > 0) &&
+          (that.x + that.size - sinWave <
+            mainCanvas.width)) {
+          that.x -= sinWave;
+        }
+      };
+      this.reset = function() {
+        that.x = Math.floor(Math.random() *
+          (mainCanvas.width - 30 + 1)) + 30;
+        that.y = mainCanvas.height + that.size;
+        that.speed = Math.floor(Math.random() * 5) + 1;
+      };
+    };
+
+    function createBubbles(number) {
+      for (var i = 0; i < number; i++) {
+        var gradient;
+        var color = getRandomColor();
+
+        //Math.floor(Math.random() * (max - min + 1)) + min;
+        //x, y, size, color, speed
+        bubbles.push(new Bubble(Math.floor(Math.random() *
+            (mainCanvas.width - 30 + 1)) + 30,
+          Math.floor(Math.random() * mainCanvas.height),
+          Math.floor(Math.random() * 10) + 5,
+          color,
+          Math.floor(Math.random() * 5) + 1));
+      }
+    }
+
+    function drawCanvas() {
+      ctx.fillStyle = "rgb(0,0,0)";
+      ctx.rect(0, 0, mainCanvas.width, mainCanvas.height);
+      ctx.fill();
+      var gradient;
+      var xGrad = 0;
+      var yGrad = 0;
+
+      for (var i = 0; i < bubbles.length; i++) {
+        /*if ((bubbles[i].x < (mainCanvas.width/2)) && 
+          (bubbles[i].y < (mainCanvas.height/2))) {
+          xGrad = -3;
+          yGrad = -3;
+        } else if ((bubbles[i].x > (mainCanvas.width/2)) && 
+          (bubbles[i].y < (mainCanvas.height/2))) {
+          xGrad = 3;
+          yGrad = -3;
+        } else if ((bubbles[i].x > (mainCanvas.width/2)) && 
+          (bubbles[i].y > (mainCanvas.height/2))) {
+          xGrad = 3;
+          yGrad = 3;
+        } else if ((bubbles[i].x < (mainCanvas.width/2)) && 
+          (bubbles[i].y > (mainCanvas.height/2))) {
+          xGrad = -3;
+          yGrad = 3;
+        } */
+          gradient = ctx.createRadialGradient(bubbles[i].x +
+            xGrad, bubbles[i].y + yGrad, bubbles[i].size,
+            bubbles[i].x, bubbles[i].y, 0);
+          gradient.addColorStop(0, bubbles[i].color);
+          gradient.addColorStop(0.8, "rgba(51,51,51,.1)");
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(bubbles[i].x, bubbles[i].y,
+            bubbles[i].size, 0, 2 * Math.PI);
+          ctx.closePath();
+          ctx.fill();
+      }
+    }
+
+    function drawTimeout() {
+      for (var i = 0; i < bubbles.length; i++) {
+        bubbles[i].rise();
+      }
+      drawCanvas();
+      setTimeout(drawTimeout, 35);
+    }
+
+    function getPosition(event) {
+      var xPosition = event.clientX;
+      var yPosition = event.clientY;
+      for (var i = 0; i < bubbles.length; i++) {
+        if (xPosition >= bubbles[i].x 
+          && xPosition <= (bubbles[i].x + (bubbles[i].size * 2))
+          && yPosition >= bubbles[i].y 
+          && yPosition <= (bubbles[i].y + (bubbles[i].size * 2))) {
+
+          bubbles[i].reset();
+        }
+      }
+    }
+
+    function start() {
+      mainCanvas = document.getElementById("canvas");
+      mainCanvas.addEventListener("click", getPosition);
+      mainCanvas.width = window.innerWidth - 40;
+      mainCanvas.height = window.innerHeight - 40;
+      ctx = mainCanvas.getContext("2d");
+      bubbles = new Array();
+      createBubbles(50);
+      drawTimeout();
+    }
+
+    //for random color generator: 		
+    //http://krazydad.com/tutorials/makecolors.php
+    function getRandomColor() {
+      //to have sine wave oscillate something
+      //Math.sin(frequency*increment)*amplitude + center;
+      var i = Math.floor(Math.random() * 33);
+      //bright colors
+      var frequency = 0.3;
+      var amplitude = 128;
+      var center = 127;
+      /*
+      //pastel colors
+      var frequency = 0.9;
+      var amplitude = 55;
+      var center = 200;*/
+      red = Math.sin(frequency * i + 4) * amplitude + center;
+      green = Math.sin(frequency * i + 2) * amplitude + center;
+      blue = Math.sin(frequency * i + 0) * amplitude + center;
+      return RGB2Color(red, green, blue);
+    };
+
+    function RGB2Color(r, g, b) {
+      return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
+    };
+
+    function byte2Hex(n) {
+      var nybHexString = "0123456789ABCDEF";
+      return String(nybHexString.substr((n >> 4) & 0x0f, 1)) + nybHexString.substr(n & 0x0f, 1);
+    };
+
+  </script>
+
+</html>
