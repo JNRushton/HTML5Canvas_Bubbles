@@ -15,10 +15,6 @@ A working internet browser.
 * **Kyle Melville** - *Initial work* 
 * **Jennifer Rushton** - *Initial work*
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
 ## Acknowledgments
 
 * Hat tip to KrazyDad for random color generation: http://krazydad.com/tutorials/makecolors.php
