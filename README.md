@@ -12,9 +12,10 @@ A working internet browser.
 
 ## Authors
 
-* **Kyle Melville** - *Initial work* 
-* **Jennifer Rushton** - *Initial work*
+* **Kyle Melville** - *Initial work* - https://github.com/kylemelville
+* **Jennifer Rushton** - *Initial work* - https://github.com/JNRushton/
 
 ## Acknowledgments
 
-* Hat tip to KrazyDad for random color generation: http://krazydad.com/tutorials/makecolors.php
+* Big thank you to KrazyDad for random color generation: http://krazydad.com/tutorials/makecolors.php
+* Thank you PurpleBooth for your ReadMe template: https://gist.githubusercontent.com/PurpleBooth/109311bb0361f32d87a2/raw/8254b53ab8dcb18afc64287aaddd9e5b6059f880/README-Template.md
